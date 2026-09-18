@@ -1,11 +1,18 @@
 import { SectionHeading } from "./section-heading";
 import { CheckIcon } from "./icons";
 
+// 요금은 Supabase price_rules(상품 상세페이지·예약 폼 기준)의 최저가와 맞춰 둔다.
+// DB 요금을 바꾸면 여기 표기도 함께 수정할 것.
 const PLANS = [
   {
-    name: "스위트 그린룸",
-    price: "₩90,000",
-    notes: ["시간당 30,000원", "(회의 및 소규모파티용)"],
+    name: "시그니처 스위트",
+    price: "₩50,000~",
+    unit: "1시간 기준",
+    notes: [
+      "룸 시간당 50,000원 · 통대관 100,000원",
+      "최소 2시간부터",
+      "(회의 및 소규모파티용)",
+    ],
     features: [
       "98인치 모니터 완비",
       "프라이빗 단독 이용",
@@ -18,8 +25,13 @@ const PLANS = [
   },
   {
     name: "시그니처 컨벤션",
-    price: "₩350,000",
-    notes: ["기본 6시간 / 시간제 이용가능", "(세미나 / 강의 / 연회용)"],
+    price: "₩300,000~",
+    unit: "패키지 1회 기준",
+    notes: [
+      "3시간권 또는 오전·낮·밤 타임 패키지",
+      "요일·시간대별 요금 상이",
+      "(세미나 / 강의 / 연회용)",
+    ],
     features: [
       "200인치 LED 스크린완비",
       "세미나·워크숍 전용 공간",
@@ -32,8 +44,13 @@ const PLANS = [
   },
   {
     name: "시그니처 루프탑",
-    price: "₩200,000",
-    notes: ["(포토존 / BBQ파티 / 야외행사)"],
+    price: "₩70,000~",
+    unit: "패키지 1회 기준",
+    notes: [
+      "3시간권 또는 낮·밤·올데이 패키지",
+      "요일·시간대별 요금 상이",
+      "(포토존 / BBQ파티 / 야외행사)",
+    ],
     features: [
       "루프탑 단독 대관",
       "도심 야외 파티 공간",
@@ -64,10 +81,13 @@ export function Pricing() {
               <h3 className="text-center text-lg font-bold text-ink">
                 {plan.name}
               </h3>
-              <p className="mt-4 text-center text-4xl font-bold tracking-tight text-ink md:text-5xl">
+              <p className="mt-4 text-center text-4xl font-bold tracking-tight text-ink md:text-3xl lg:text-4xl xl:text-5xl">
                 {plan.price}
               </p>
-              <div className="mt-3 min-h-12 text-center text-sm leading-relaxed text-muted">
+              <p className="mt-1 text-center text-sm font-medium text-ink/70">
+                {plan.unit}
+              </p>
+              <div className="mt-3 min-h-16 text-center md:min-h-[7.5rem] lg:min-h-16 text-sm leading-relaxed text-muted">
                 {plan.notes.map((note) => (
                   <p key={note}>{note}</p>
                 ))}

@@ -103,6 +103,7 @@ export default function TermsPage() {
           <Info label="대표자" value="오경옥" />
           <Info label="주소" value="서울특별시 서초구 마방로 48, 2층(양재동, 통인빌딩)" />
           <Info label="사업자등록번호" value="294-46-01320" />
+          <Info label="통신판매업신고번호" value="제 2026-서울서초-3142 호" />
         </dl>
       </Article>
     </LegalLayout>
