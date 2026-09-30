@@ -122,6 +122,11 @@ export function BookingForm() {
     }
   }, [slots, slotCode]);
 
+  /** 선택한 패키지 슬롯 — 시작 시각이 정해지지 않은 상품(3시간권·12시간)은 손님이 시작 시각을 고른다 */
+  const selectedSlot = slots.find((s) => s.slot_code === slotCode) ?? null;
+  const needsStartTime =
+    unit?.booking_unit === "hourly" || (selectedSlot !== null && !selectedSlot.starts_at);
+
   const currentQuote: Quote | null = useMemo(() => {
     if (!data || !unit) return null;
     return quote({
@@ -167,7 +172,7 @@ export function BookingForm() {
         unitCode: unit.code,
         date,
         slotCode: unit.booking_unit === "package" ? slotCode : null,
-        startTime: unit.booking_unit === "hourly" ? startTime : null,
+        startTime: needsStartTime ? startTime : null,
         endTime: unit.booking_unit === "hourly" ? endTime : null,
         headcount,
         name,
@@ -374,6 +379,15 @@ export function BookingForm() {
                     )}
                   </Chip>
                 ))}
+                {selectedSlot && !selectedSlot.starts_at && (
+                  <div className="mt-3 flex items-center gap-3">
+                    <span className="text-sm text-muted">시작 시각</span>
+                    <Select value={startTime} onChange={setStartTime} options={HOURS} />
+                    <span className="text-sm text-muted">
+                      부터 {selectedSlot.duration_h}시간
+                    </span>
+                  </div>
+                )}
               </div>
             )
           ) : (

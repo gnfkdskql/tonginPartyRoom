@@ -4,19 +4,19 @@ import { ArrowRightIcon, CubeIcon } from "./icons";
 const SPACES = [
   {
     title: "시그니처 스위트",
-    desc: "4명부터 12명까지. 신부 파티와 와인 모임에 완벽합니다.",
+    desc: "6명부터 20명까지. 자쿠지가 있는 프라이빗 파티 공간입니다.",
     image: "/images/sweet.png",
     href: "/spaces/2f",
   },
   {
     title: "시그니처 컨벤션",
-    desc: "20명에서 60명까지, 기업 워크숍과 세미나를 위한 공간입니다.",
+    desc: "15명부터 60명까지, 기업 워크숍과 세미나를 위한 공간입니다.",
     image: "/images/convention.png",
     href: "/spaces/4f",
   },
   {
     title: "시그니처 루프탑",
-    desc: "6명부터 20명까지. 야외 테라스에서 저녁 네트워킹을 즐기세요.",
+    desc: "6명부터 30명까지. 반려견과 함께 즐기는 프라이빗 루프탑입니다.",
     image: "/images/rooftop.png",
     href: "/spaces/6f",
   },
