@@ -1,11 +1,4 @@
 import { Logo } from "./logo";
-import {
-  FacebookIcon,
-  InstagramIcon,
-  LinkedInIcon,
-  XIcon,
-  YouTubeIcon,
-} from "./icons";
 
 const KAKAO_CHANNEL_URL = "https://pf.kakao.com/_xiGLxkn/chat";
 
@@ -18,14 +11,6 @@ const NAV: { label: string; href: string; external?: boolean }[] = [
   { label: "연락처", href: "/#cta" },
 ];
 
-const SOCIALS = [
-  { label: "Facebook", href: "#", Icon: FacebookIcon },
-  { label: "Instagram", href: "#", Icon: InstagramIcon },
-  { label: "X", href: "#", Icon: XIcon },
-  { label: "LinkedIn", href: "#", Icon: LinkedInIcon },
-  { label: "YouTube", href: "#", Icon: YouTubeIcon },
-];
-
 const LEGAL = [
   { label: "개인정보처리방침", href: "/privacy/" },
   { label: "이용약관", href: "/terms/" },
@@ -36,20 +21,21 @@ const LEGAL = [
 const BUSINESS = [
   { label: "상호", value: "서초시그니처파티룸" },
   { label: "대표자", value: "오경옥" },
-  { label: "주소", value: "서울특별시 서초구 마방로 48, 2층(양재동, 통인빌딩)" },
   { label: "사업자번호", value: "294-46-01320" },
   { label: "통신판매업신고", value: "제 2026-서울서초-3142 호" },
+  { label: "주소", value: "서울특별시 서초구 마방로 48, 2층(양재동, 통인빌딩)" },
   { label: "고객센터", value: "1577-2123" },
 ];
 
 export function SiteFooter() {
   return (
     <footer className="border-t border-line bg-surface">
-      <div className="mx-auto max-w-(--container-page) px-5 py-12 lg:px-8">
-        <div className="flex flex-col items-center gap-8 md:flex-row md:justify-between">
-          <Logo className="h-14 w-auto" />
+      <div className="mx-auto max-w-(--container-page) px-5 py-10 lg:px-8 md:py-14">
+        {/* 상단: 로고 + 메뉴. 모바일은 왼쪽 정렬로 촘촘하게, 데스크톱은 양끝 */}
+        <div className="flex flex-col items-start gap-7 md:flex-row md:items-center md:justify-between">
+          <Logo className="h-12 w-auto" />
 
-          <nav className="flex flex-wrap items-center justify-center gap-x-7 gap-y-3 text-sm font-medium text-ink/90">
+          <nav className="grid grid-cols-3 gap-x-4 gap-y-3 text-sm text-ink/90 md:flex md:flex-wrap md:gap-x-7">
             {NAV.map((item) => (
               <a
                 key={item.label}
@@ -62,36 +48,22 @@ export function SiteFooter() {
               </a>
             ))}
           </nav>
-
-          <div className="flex items-center gap-4 text-ink">
-            {SOCIALS.map(({ label, href, Icon }) => (
-              <a
-                key={label}
-                href={href}
-                aria-label={label}
-                className="transition-opacity hover:opacity-60"
-              >
-                <Icon className="h-5 w-5" />
-              </a>
-            ))}
-          </div>
         </div>
 
         <hr className="my-8 border-line" />
 
-        {/* 사업자 정보 */}
-        <dl className="mb-6 flex flex-col items-center gap-x-5 gap-y-1.5 text-xs leading-relaxed text-muted md:flex-row md:flex-wrap md:justify-center">
+        {/* 사업자 정보: 모바일은 라벨/값 2열 표, 데스크톱은 한 줄 나열 */}
+        <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-xs leading-relaxed md:flex md:flex-wrap md:gap-x-5">
           {BUSINESS.map((item) => (
-            <div key={item.label} className="flex gap-1.5">
+            <div key={item.label} className="contents md:flex md:gap-1.5">
               <dt className="text-muted/70">{item.label}</dt>
               <dd className="text-ink/70">{item.value}</dd>
             </div>
           ))}
         </dl>
 
-        <div className="flex flex-col items-center gap-3 text-sm text-muted md:flex-row md:justify-center md:gap-6">
-          <p>© 2025 Seocho Signature. All rights reserved.</p>
-          <div className="flex items-center gap-6">
+        <div className="mt-7 flex flex-col gap-3 text-xs text-muted md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
             {LEGAL.map((item) => (
               <a
                 key={item.label}
@@ -102,6 +74,7 @@ export function SiteFooter() {
               </a>
             ))}
           </div>
+          <p>© 2026 서초시그니처파티룸. All rights reserved.</p>
         </div>
       </div>
     </footer>
