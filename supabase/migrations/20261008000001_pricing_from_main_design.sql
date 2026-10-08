@@ -40,9 +40,9 @@ where u.code = '4f-hall';
 
 delete from extra_person_rules where unit_id = (select id from units where code = '4f-hall');
 insert into extra_person_rules (unit_id, slot_code, min_hours, max_hours, fee)
-select id, null, null, null, 10000 from units where code = '4f-hall'
+select id, null::text, null::numeric, null::numeric, 10000 from units where code = '4f-hall'
 union all
-select id, '3h', null, null, 20000 from units where code = '4f-hall';
+select id, '3h'::text, null::numeric, null::numeric, 20000 from units where code = '4f-hall';
 
 -- ── 6F 요금 ───────────────────────────────────────────────────────────────
 delete from price_rules where unit_id = (select id from units where code = '6f-rooftop');
@@ -59,4 +59,4 @@ where u.code = '6f-rooftop';
 
 delete from extra_person_rules where unit_id = (select id from units where code = '6f-rooftop');
 insert into extra_person_rules (unit_id, slot_code, min_hours, max_hours, fee)
-select id, null, null, null, 15000 from units where code = '6f-rooftop';
+select id, null::text, null::numeric, null::numeric, 15000 from units where code = '6f-rooftop';
