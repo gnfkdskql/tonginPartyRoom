@@ -1,79 +1,24 @@
 import { SectionHeading } from "./section-heading";
 import { CheckIcon } from "./icons";
+import {
+  PRICE_CARDS,
+  PRICE_FOOTNOTE,
+  PRICE_TABLES,
+  type Cell,
+  type PriceTable,
+} from "@/lib/pricing-tables";
 
-// 요금은 Supabase price_rules(상품 상세페이지·예약 폼 기준)의 최저가와 맞춰 둔다.
-// DB 요금을 바꾸면 여기 표기도 함께 수정할 것.
-const PLANS = [
-  {
-    name: "시그니처 스위트",
-    price: "₩30,000~",
-    unit: "1시간 기준",
-    notes: [
-      "룸 시간당 30,000~50,000원 · 통대관 100,000원",
-      "3시간·모닝·낮·저녁·12시간 패키지 운영",
-      "(회의 및 소규모파티용)",
-    ],
-    features: [
-      "98인치 모니터 완비",
-      "프라이빗 단독 이용",
-      "감성 라운지형 파티 공간",
-      "자쿠지 시설 보유",
-      "개별 화장실 보유",
-      "생일파티·브라이덜샤워 추천",
-    ],
-    cta: "예약하기",
-  },
-  {
-    name: "시그니처 컨벤션",
-    price: "₩300,000~",
-    unit: "패키지 1회 기준",
-    notes: [
-      "3시간권 또는 오전·낮·밤 타임 패키지",
-      "요일·시간대별 요금 상이",
-      "(세미나 / 강의 / 연회용)",
-    ],
-    features: [
-      "200인치 LED 스크린완비",
-      "세미나·워크숍 전용 공간",
-      "음향·마이크 사용 가능",
-      "넓은 테이블 세팅 가능",
-      "야간 대관 합리적 이용",
-      "기업 행사 및 모임 추천",
-    ],
-    cta: "예약하기",
-  },
-  {
-    name: "시그니처 루프탑",
-    price: "₩70,000~",
-    unit: "패키지 1회 기준",
-    notes: [
-      "3시간권 또는 낮·밤·올데이 패키지",
-      "요일·시간대별 요금 상이 · 최대 30명",
-      "(반려견 동반 / BBQ파티 / 포토존)",
-    ],
-    features: [
-      "루프탑 단독 대관",
-      "도심 야외 파티 공간",
-      "낮부터 밤까지 여유로운 이용",
-      "룸옵션 (80인치모니터 완비)",
-      "단체 행사 및 특별한 날 추천",
-      "반려견 동반 · 바비큐 모임 추천",
-    ],
-    cta: "예약하기",
-  },
-];
+// 요금 숫자·문구는 src/lib/pricing-tables.ts 에서 관리한다.
 
 export function Pricing() {
   return (
-    <section
-      id="pricing"
-      className="bg-surface py-20 md:py-28"
-    >
+    <section id="pricing" className="bg-surface py-20 md:py-28">
       <div className="mx-auto max-w-(--container-page) px-5 lg:px-8">
         <SectionHeading eyebrow="요금" title="명확한 가격" />
 
+        {/* 요금 카드 3개 */}
         <div className="mt-12 grid gap-6 md:mt-16 md:grid-cols-3">
-          {PLANS.map((plan) => (
+          {PRICE_CARDS.map((plan) => (
             <div
               key={plan.name}
               className="flex flex-col border border-line bg-surface p-8"
@@ -84,10 +29,7 @@ export function Pricing() {
               <p className="mt-4 text-center text-4xl font-bold tracking-tight text-ink md:text-3xl lg:text-4xl xl:text-5xl">
                 {plan.price}
               </p>
-              <p className="mt-1 text-center text-sm font-medium text-ink/70">
-                {plan.unit}
-              </p>
-              <div className="mt-3 min-h-16 text-center md:min-h-[7.5rem] lg:min-h-16 text-sm leading-relaxed text-muted">
+              <div className="mt-3 min-h-12 text-center text-sm leading-relaxed text-muted">
                 {plan.notes.map((note) => (
                   <p key={note}>{note}</p>
                 ))}
@@ -95,7 +37,10 @@ export function Pricing() {
 
               <ul className="mt-8 flex-1 space-y-4">
                 {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-3 text-sm text-ink/90">
+                  <li
+                    key={feature}
+                    className="flex items-start gap-3 text-sm text-ink/90"
+                  >
                     <CheckIcon className="mt-0.5 h-4 w-4 shrink-0 text-ink" />
                     <span>{feature}</span>
                   </li>
@@ -106,12 +51,138 @@ export function Pricing() {
                 href="/booking/"
                 className="mt-8 flex h-12 items-center justify-center bg-ink text-sm font-medium text-white transition-opacity hover:opacity-90"
               >
-                {plan.cta}
+                예약하기
               </a>
             </div>
           ))}
         </div>
+
+        {/* 공간별 상세 요금표 */}
+        <div className="mt-16 space-y-12 md:mt-20">
+          {PRICE_TABLES.map((table) => (
+            <RateTable key={table.name} table={table} />
+          ))}
+        </div>
+
+        <p className="mt-6 text-xs leading-relaxed text-muted md:text-sm">
+          {PRICE_FOOTNOTE}
+        </p>
       </div>
     </section>
+  );
+}
+
+function cellText(c: Cell): string {
+  return typeof c === "string" ? c : c.text;
+}
+function cellSpan(c: Cell): number {
+  return typeof c === "string" ? 1 : (c.span ?? 1);
+}
+
+function RateTable({ table }: { table: PriceTable }) {
+  // 상단 요약은 항상 7칸(공간명 + 라벨/값 3쌍). 본문이 그보다 좁으면 행 머리칸을 넓혀 맞춘다.
+  const bodyCols = table.columns.reduce((s, c) => s + cellSpan(c), 0);
+  const totalCols = Math.max(7, bodyCols);
+  const labelSpan = totalCols - bodyCols + 1;
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full min-w-[720px] border-collapse text-center text-sm">
+        <tbody>
+          {/* 상단 요약: 공간명(세로 병합) + 보증금/인원/옵션/면적 */}
+          {table.meta.map((row, i) => (
+            <tr key={i} className="border border-line">
+              {i === 0 && (
+                <th
+                  rowSpan={table.meta.length}
+                  scope="rowgroup"
+                  className="w-[18%] whitespace-nowrap border border-line bg-surface-soft px-3 py-3 text-base font-bold text-ink"
+                >
+                  {table.name}
+                </th>
+              )}
+              {row.map((m) => (
+                <MetaPair key={m.label} label={m.label} value={m.value} wide={row.length === 2 && m.label === "옵션"} />
+              ))}
+            </tr>
+          ))}
+
+          {/* 머리글 */}
+          <tr className="border border-line bg-surface-soft">
+            {table.columns.map((c, i) => (
+              <th
+                key={i}
+                colSpan={i === 0 ? labelSpan : cellSpan(c)}
+                scope="col"
+                className="whitespace-nowrap border border-line px-3 py-3 font-bold text-ink"
+              >
+                {cellText(c)}
+              </th>
+            ))}
+          </tr>
+
+          {/* 본문 */}
+          {table.rows.map((r) => (
+            <tr key={r.label} className="border border-line">
+              <th
+                scope="row"
+                colSpan={labelSpan}
+                className="whitespace-nowrap border border-line bg-surface-soft px-3 py-3 font-bold text-ink"
+              >
+                {r.label}
+              </th>
+              {r.cells.map((c, i) => (
+                <td
+                  key={i}
+                  colSpan={cellSpan(c)}
+                  className="border border-line px-3 py-3 tabular-nums text-ink"
+                >
+                  {cellText(c)}
+                </td>
+              ))}
+            </tr>
+          ))}
+
+          {/* 주석 */}
+          {table.notes?.map((n) => (
+            <tr key={n} className="border border-line">
+              <td
+                colSpan={totalCols}
+                className="border border-line px-3 py-3 text-xs text-muted md:text-sm"
+              >
+                {n}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/** 라벨 칸 + 값 칸 한 쌍. 옵션처럼 긴 값은 여러 칸을 차지한다. */
+function MetaPair({
+  label,
+  value,
+  wide,
+}: {
+  label: string;
+  value: string;
+  wide?: boolean;
+}) {
+  return (
+    <>
+      <th
+        scope="row"
+        className="whitespace-nowrap border border-line bg-surface-soft px-3 py-3 font-bold text-ink"
+      >
+        {label}
+      </th>
+      <td
+        colSpan={wide ? 3 : 1}
+        className="border border-line px-3 py-3 text-ink"
+      >
+        {value}
+      </td>
+    </>
   );
 }
