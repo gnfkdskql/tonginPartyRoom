@@ -91,7 +91,9 @@ export function extraPersonFee(
   // 조건이 더 구체적인(구간이 지정된) 규칙을 우선한다
   matched.sort((a, b) => {
     const score = (r: ExtraPersonRule) =>
-      (r.min_hours !== null ? 1 : 0) + (r.max_hours !== null ? 1 : 0);
+      (r.slot_code !== null ? 1 : 0) +
+      (r.min_hours !== null ? 1 : 0) +
+      (r.max_hours !== null ? 1 : 0);
     return score(b) - score(a);
   });
   return matched[0]?.fee ?? 0;
@@ -202,6 +204,10 @@ export function quote(input: QuoteInput): Quote {
     if (rule.starts_at && rule.ends_at) {
       startsAt = kstDateTime(date, rule.starts_at);
       endsAt = kstDateTime(date, rule.ends_at);
+      // 올나잇(19시~익일 08시)처럼 종료가 시작보다 이르면 다음 날로 넘긴다
+      if (endsAt.getTime() <= startsAt.getTime()) {
+        endsAt = new Date(endsAt.getTime() + 24 * 3_600_000);
+      }
       hours = (endsAt.getTime() - startsAt.getTime()) / 3_600_000;
     } else {
       // 3시간권처럼 시작 시각이 정해지지 않은 상품 — 시작 시각을 별도로 받는다
