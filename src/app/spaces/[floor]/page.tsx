@@ -7,7 +7,7 @@ import { SiteFooter } from "@/components/site-footer";
 // 세로 1500px씩 잘라둔다 (public/images/floor-{key}-01.webp ~). 조각 수는 층마다 다름.
 const FLOORS = {
   "2f": { floor: "2F", name: "시그니처 스위트", slices: 7 },
-  "4f": { floor: "4F", name: "시그니처 컨벤션", slices: 8 },
+  "4f": { floor: "4F", name: "시그니처 컨벤션", slices: 7 },
   "6f": { floor: "6F", name: "시그니처 루프탑", slices: 7 },
 } as const;
 
